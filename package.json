@@ -12,6 +12,10 @@
   },
   "author": "Pedro Pedrosa",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pedro-pedrosa/ts-expressions.git"
+  },
   "dependencies": {
     "tslib": "^1.9.2",
     "typescript": "^2.9.1"
