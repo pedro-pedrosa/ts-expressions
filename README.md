@@ -39,7 +39,7 @@ const compilerOptions = {
 const program = ts.createProgram(sources, compilerOptions);
 
 const result = program.emit(undefined, undefined, undefined, false, {
-    before: [ transformer(program) ],
+  before: [ transformer(program) ],
 });
 ```
 
