@@ -18,7 +18,7 @@ You will need to use a custom TypeScript compiler to make use of the ts-expressi
 {
   "compilerOptions": {
     "plugins": [
-      { "transform": "ts-expressions/lib/transformer" }
+      { "transform": "ts-expressions" }
     ]
   },
 }
@@ -43,7 +43,7 @@ const result = program.emit(undefined, undefined, undefined, false, {
 });
 ```
 
-It is currently not supported to use the out-of-the-box TypeScript compiler (tsc) with this plug-in. You can [show your support here](https://github.com/Microsoft/TypeScript/issues/14419) if you'd like to see plugin support built into the TypeScript compiler.
+It is currently not supported to use the out-of-the-box TypeScript compiler (tsc) with this plug-in. You can [show some love here](https://github.com/Microsoft/TypeScript/issues/14419) if you'd like to see plugin support built into the TypeScript compiler.
 
 ## How to use
 To declare a function that accepts expressions, you must declare one overload that uses a parameter of type `Expression` and another overload that uses a parameter of the type of expression you want to work with.
@@ -67,7 +67,7 @@ Then call it using:
 numeric(5 + 1);
 ```
 
-Which would be equivalent to:
+Which would be translated by the transformer to:
 
 ```ts
 import * as builder from 'ts-expressions/lib/expressions/ExpressionBuilder';

@@ -1,0 +1,27 @@
+{
+  "name": "ts-expressions",
+  "version": "0.0.1",
+  "description": "Provides a set of types and tools to work with expression trees in TypeScript",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "npm run clean-tests&&jest",
+    "clean-tests": "del tests\\*.src.js"
+  },
+  "author": "Pedro Pedrosa",
+  "license": "MIT",
+  "dependencies": {
+    "tslib": "^1.9.2",
+    "typescript": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.0.0",
+    "jest": "^23.1.0",
+    "ts-jest": "^22.4.6"
+  },
+  "jest": {
+    "testRegex": "(?:/tests/[^\\./]*)\\.(?:jsx?)$"
+  }
+}
