@@ -9,7 +9,7 @@ ts-expressions is a TypeScript transformer that helps you get information about 
 npm i ts-expressions
 ```
 
-## How dows it work
+## How does it work
 The transformer provided by ts-expressions will analyze TypeScript code and look for calls to functions that contain an overload which declares parameters of type `Expression`. If the function call being analyzed is passing arguments of types other than `Expression`, those arguments are converted to expressions during the compilation of the program.
 
 You will need to use a custom TypeScript compiler to make use of the ts-expressions transformer. You can use [ttypescript](https://github.com/cevek/ttypescript) to compile your program using the following configuration in `ts.config`:
