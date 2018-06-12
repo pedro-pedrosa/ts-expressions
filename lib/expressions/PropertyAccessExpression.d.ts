@@ -1,6 +1,8 @@
-import { Expression } from './Expression';
-export declare class PropertyAccessExpression extends Expression {
-    constructor(expression: Expression, name: string);
-    expression: Expression;
+import { ExpressionBase } from './Expression';
+import { ExpressionKind } from './ExpressionKind';
+export declare class PropertyAccessExpression extends ExpressionBase {
+    constructor(expression: ExpressionBase, name: string);
+    kind: ExpressionKind;
+    expression: ExpressionBase;
     name: string;
 }

@@ -1,9 +1,11 @@
-import { Expression } from './Expression';
+import { ExpressionBase } from './Expression';
 import { ParameterExpression } from './ParameterExpression';
-export declare class LambdaExpression extends Expression {
-    constructor(parameters: ParameterExpression[], body: Expression);
+import { ExpressionKind } from './ExpressionKind';
+export declare class LambdaExpression extends ExpressionBase {
+    constructor(parameters: ParameterExpression[], body: ExpressionBase);
+    kind: ExpressionKind;
     parameters: ParameterExpression[];
-    body: Expression;
+    body: ExpressionBase;
     static create(lambda: (...args: any[]) => any): LambdaExpression;
     static create(expression: LambdaExpression): LambdaExpression;
 }

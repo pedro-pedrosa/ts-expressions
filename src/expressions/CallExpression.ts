@@ -1,11 +1,13 @@
-import { Expression } from './Expression';
+import { ExpressionBase } from './Expression';
+import { ExpressionKind } from './ExpressionKind';
 
-export class CallExpression extends Expression {
-    constructor(calleeExpresion: Expression, ...args: Expression[]) {
+export class CallExpression extends ExpressionBase {
+    constructor(calleeExpresion: ExpressionBase, ...args: ExpressionBase[]) {
         super();
         this.calleeExpresion = calleeExpresion;
         this.arguments = args;
     }
-    calleeExpresion: Expression;
-    arguments: Expression[];
+    kind = ExpressionKind.binary;
+    calleeExpresion: ExpressionBase;
+    arguments: ExpressionBase[];
 }

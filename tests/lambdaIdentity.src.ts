@@ -1,8 +1,8 @@
 import * as expr from '..';
 
-function convert<T>(f: ((x: T) => T)): expr.Expression;
-function convert<T>(f: expr.Expression): expr.Expression;
-function convert(f: any): expr.Expression {
+function convert<T>(f: (x: T) => T): expr.Expression<(x: T) => T>;
+function convert<T>(f: expr.Expression<T>): expr.Expression<T>;
+function convert<T>(f: any): expr.Expression<T> {
     return expr.checkExpressionParameter(f, 'f');
 }
 
