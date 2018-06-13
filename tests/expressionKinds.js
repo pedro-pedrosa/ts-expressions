@@ -127,7 +127,7 @@ describe('expression kinds', () => {
     test('converts a call (2 args)', () => {
         expect(compiledTest.out.default.call2).toMatchObject((() => {
             return ExpressionBuilder.call(
-                ExpressionBuilder.constant(scopeFunction1),
+                ExpressionBuilder.constant(scopeFunction2),
                 ExpressionBuilder.constant(scopeVariable),
                 ExpressionBuilder.constant(1));
         })());
