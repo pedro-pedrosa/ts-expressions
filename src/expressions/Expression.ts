@@ -3,11 +3,11 @@ import { ExpressionKind } from './ExpressionKind';
 export const expressionSymbol = Symbol();
 
 export interface Expression<T> {
-    [expressionSymbol]: any;
+    [expressionSymbol]: T;
     kind: ExpressionKind;
 }
 
 export abstract class ExpressionBase implements Expression<{}> {
-    [expressionSymbol] = true;
+    [expressionSymbol] = {};
     abstract kind: ExpressionKind;
 }

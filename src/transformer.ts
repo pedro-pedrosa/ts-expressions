@@ -5,8 +5,6 @@ export default function transformer(program: ts.Program, tsExpressionsModulePath
     return (context: ts.TransformationContext) => (file: ts.SourceFile) => new FileTransformer(program, context, file, tsExpressionsModulePath).transformFile();
 }
 
-type ExpressionType = 'Expression' | 'LambdaExpression';
-
 class FileTransformer {
     constructor(program: ts.Program, context: ts.TransformationContext, file: ts.SourceFile, tsExpressionsModulePath?: string) {
         this.program = program;
@@ -65,54 +63,82 @@ class FileTransformer {
         return ts.visitEachChild(node, child => this.visit(child), this.context);
     }
 
-    getOverloadDeclarations(declaration: ts.FunctionLikeDeclarationBase): ts.FunctionLikeDeclarationBase[] {
+    getCompatibleOverloadDeclarations(declaration: ts.FunctionLikeDeclarationBase): ts.FunctionLikeDeclarationBase[] {
         if (!declaration.name) {
             return [];
         }
+        let delcarationsInScope: ts.FunctionLikeDeclarationBase[] = null;
         if (ts.isMethodDeclaration(declaration) && ts.isClassDeclaration(declaration.parent)) {
-            return declaration.parent.members
-                .filter(child => ts.isMethodDeclaration(child) && child.name && child.name.getText() == declaration.name.getText())
+            delcarationsInScope = declaration.parent.members
+                .filter(child => ts.isMethodDeclaration(child))
                 .map(child => child as ts.MethodDeclaration);
         }
-        if (ts.isFunctionDeclaration(declaration) && ts.isSourceFile(declaration.parent)) {
-            return declaration.parent.statements
-                .filter(child => ts.isFunctionDeclaration(child) && child.name && child.name.getText() == declaration.name.getText())
-                .map(child => child as ts.FunctionDeclaration);
+        else if (ts.isFunctionDeclaration(declaration)) {
+            //TODO: support function declarations in sub-scopes
+            if (ts.isSourceFile(declaration.parent)) {
+                delcarationsInScope = declaration.parent.statements
+                    .filter(child => ts.isFunctionDeclaration(child))
+                    .map(child => child as ts.FunctionDeclaration);
+            }
         }
-        return [];
+        if (!delcarationsInScope) {
+            return [];
+        }
+        return delcarationsInScope
+            .filter(d => 
+                d.name && d.name.getText() == declaration.name.getText() &&
+                d.parameters.length == declaration.parameters.length &&
+                d.parameters.every((p, i) => this.isParameterSameType(declaration.parameters[i], p) || this.isParameterConvertible(declaration.parameters[i], p)));
     }
     getBestExpressionOverloadDeclarationFromCallExpression(callExpression: ts.CallExpression): ts.FunctionLikeDeclarationBase {
         const signature = this.typeChecker.getResolvedSignature(callExpression);
         if (!signature || (!ts.isFunctionDeclaration(signature.declaration) && !ts.isMethodDeclaration(signature.declaration))) {
             return undefined;
         }
-        const bestOverload = this.getOverloadDeclarations(signature.declaration)
+        const bestOverload = this.getCompatibleOverloadDeclarations(signature.declaration)
             .map(overload => ({
                 overload,
-                expressionArguments: overload.parameters.filter(p => this.isTypeNodeExpressionType(p.type)).length,
+                convertibleParameters: overload.parameters.filter((p, i) => this.isParameterConvertible((signature.declaration as ts.FunctionLikeDeclarationBase).parameters[i], p)).length,
             }))
-            .reduce((best, current) => (!best || current.expressionArguments > best.expressionArguments) ? current : best, undefined);
+            .reduce((best, current) => (!best || current.convertibleParameters > best.convertibleParameters) ? current : best, undefined);
         return bestOverload ? bestOverload.overload : undefined;
     }
 
-    isTypeNodeExpressionType(typeNode: ts.TypeNode, expressionType: ExpressionType = 'Expression'): boolean {
-        return this.isTypeExpressionType(this.typeChecker.getTypeFromTypeNode(typeNode), expressionType);
-    }
-    isTypeExpressionType(type: ts.Type, expressionType: ExpressionType = 'Expression'): boolean {
-        return type.symbol && type.symbol.declarations && type.symbol.declarations.findIndex(decl => this.isTypeDeclarationExpressionType(decl, expressionType)) != -1;
-    }
-    isTypeDeclarationExpressionType(declaration: ts.Declaration, expressionType: ExpressionType = 'Expression'): boolean {
-        if (!ts.isClassDeclaration(declaration)) {
+    isSameType(t1: ts.TypeNode, t2: ts.TypeNode) {
+        if (!t1 || !t2) {
             return false;
         }
-        //TODO: check if the source file comes from this module?
-        if (declaration.name && declaration.name.getText() == expressionType) {
-            return true;
+        switch (t1.kind) {
+            case ts.SyntaxKind.TypeReference:
+            return ts.isTypeReferenceNode(t2) && this.typeChecker.getTypeFromTypeNode(t1).symbol == this.typeChecker.getTypeFromTypeNode(t2).symbol;
+            default:
+            //TODO: fix this
+            return t1.getText() == t2.getText();
         }
-        if (declaration.heritageClauses && declaration.heritageClauses.length > 0) {
-            return declaration.heritageClauses.findIndex(clause => clause.types.findIndex(type => this.isTypeNodeExpressionType(type, expressionType)) != -1) != -1;
+    }
+    
+    isParameterSameType(parameter: ts.ParameterDeclaration, compareParameter: ts.ParameterDeclaration) {
+        return this.isSameType(parameter.type, compareParameter.type);
+    }
+    isParameterConvertible(parameter: ts.ParameterDeclaration, expressionParameter: ts.ParameterDeclaration) {
+        return this.isTypeNodeExpressionType(expressionParameter.type) && this.isSameType(parameter.type, this.getExpressionTypeArgument(expressionParameter.type));
+    }
+    isTypeNodeExpressionType(typeNode: ts.TypeNode): boolean {
+        return this.isTypeExpressionType(this.typeChecker.getTypeFromTypeNode(typeNode));
+    }
+    isTypeExpressionType(type: ts.Type): boolean {
+        return type.symbol && type.symbol.declarations && type.symbol.declarations.findIndex(decl => this.isTypeDeclarationExpressionType(decl)) != -1;
+    }
+    isTypeDeclarationExpressionType(declaration: ts.Declaration): boolean {
+        if (ts.isInterfaceDeclaration(declaration)) {
+            const name = declaration.name && declaration.name.getText();
+            const fileName = declaration.getSourceFile().fileName;
+            return name == 'Expression' && (fileName.endsWith('/ts-expressions/lib/expressions/Expression.d.ts') || fileName.endsWith('/ts-expressions/lib/expressions/Expression.ts'));
         }
         return false;
+    }
+    getExpressionTypeArgument(expressionType: ts.TypeNode) {
+        return ts.isTypeReferenceNode(expressionType) ? expressionType.typeArguments[0] : undefined;
     }
     isConstantExpression(expression: ts.Expression): boolean {
         if (ts.isIdentifier(expression)) {
@@ -170,10 +196,11 @@ class FileTransformer {
             return this.convertShorthandPropertyAssignment(node);
         }
         else if (ts.isCallExpression(node)) {
+            //TODO: also accept types implementing Expression
             if (ts.isPropertyAccessExpression(node.expression) && 
                 node.expression.name.getText() == 'invoke' && 
                 this.isConstantExpression(node.expression.expression) &&
-                this.isTypeExpressionType(this.typeChecker.getTypeAtLocation(node.expression.expression)), 'LambdaExpression') {
+                this.isTypeExpressionType(this.typeChecker.getTypeAtLocation(node.expression.expression))) {
                 return this.convertLambdaExpressionInvoke(node);
             }
             return this.convertCallExpression(node);
