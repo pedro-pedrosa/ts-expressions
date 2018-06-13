@@ -10,6 +10,8 @@ export declare class BinaryExpression extends ExpressionBase {
 export declare enum BinaryOperator {
     equals = 0,
     strictEquals = 1,
-    and = 2,
-    or = 3,
+    notEquals = 2,
+    and = 3,
+    or = 4,
+    plus = 5,
 }

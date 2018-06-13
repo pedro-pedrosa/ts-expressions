@@ -17,6 +17,8 @@ export class BinaryExpression extends ExpressionBase {
 export enum BinaryOperator {
     equals,
     strictEquals,
+    notEquals,
     and,
     or,
+    plus,
 }
