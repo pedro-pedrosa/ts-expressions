@@ -53,9 +53,9 @@ For example, to work with numeric expressions, you could write the following fun
 ```ts
 import * as expr from 'ts-expressions';
 
-function numeric(expression: expr.Expression);
+function numeric(expression: expr.Expression<number>);
 function numeric(expression: number);
-function numeric(arg: expr.Expression | number) {
+function numeric(arg: expr.Expression<number> | number) {
   const expression = expr.checkExpressionParameter(arg, 'expression'); //this will check if arg is an expression and will return it, otherwise throws exception
   //do whatever you want with your numeric expression tree
 }
@@ -72,5 +72,5 @@ Which would be translated by the transformer to:
 ```ts
 import * as builder from 'ts-expressions/lib/expressions/ExpressionBuilder';
 
-numeric(builder.plus(builder.constant(5), builder.constant(1));
+numeric(builder.binary(builder.constant(5), BinaryOperator.plus, builder.constant(1));
 ```
