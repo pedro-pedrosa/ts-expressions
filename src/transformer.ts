@@ -181,10 +181,10 @@ class FileTransformer {
             case ts.SyntaxKind.FalseKeyword:
                 return this.convertBoolean(false);
             case ts.SyntaxKind.ArrayLiteralExpression:
-
+                return this.convertArrayLiteral(node as ts.ArrayLiteralExpression);
             case ts.SyntaxKind.ArrowFunction:
             case ts.SyntaxKind.FunctionExpression:
-                return this.convertAnonymousFunction(node as ts.FunctionLikeDeclarationBase);
+                return this.convertLambda(node as ts.FunctionLikeDeclarationBase);
             case ts.SyntaxKind.BinaryExpression:
                 return this.convertBinaryExpression(node as ts.BinaryExpression);
             case ts.SyntaxKind.PropertyAccessExpression:
@@ -237,12 +237,24 @@ class FileTransformer {
             ]
         )
     }
-    convertAnonymousFunction(arrowFunction: ts.FunctionLikeDeclarationBase): ts.Expression {
+    convertLambda(lambda: ts.FunctionLikeDeclarationBase): ts.Expression {
+        if (!lambda.parameters || lambda.parameters.length == 0) {
+            return ts.createCall(
+                ts.createPropertyAccess(
+                    this.getBuilderIdentifier(),
+                    'lambda'),
+                [],
+                [
+                    ts.createArrayLiteral([]),
+                    this.convertNodeToExpressionNode(lambda.body),
+                ]
+            )
+        }
         return ts.createImmediatelyInvokedArrowFunction([
             ts.createVariableStatement(
                 [], 
                 ts.createVariableDeclarationList(
-                    arrowFunction.parameters.map(parameter => ts.createVariableDeclaration(
+                    lambda.parameters.map(parameter => ts.createVariableDeclaration(
                         parameter.name, 
                         undefined,
                         ts.createCall(
@@ -263,8 +275,8 @@ class FileTransformer {
                         'lambda'),
                     [],
                     [
-                        ts.createArrayLiteral(arrowFunction.parameters.map(parameter => ts.createIdentifier(parameter.name.getText()))),
-                        this.executeInNewScope(() => this.convertNodeToExpressionNode(arrowFunction.body), arrowFunction.parameters.map(parameter => parameter.name.getText())),
+                        ts.createArrayLiteral(lambda.parameters.map(parameter => ts.createIdentifier(parameter.name.getText()))),
+                        this.executeInNewScope(() => this.convertNodeToExpressionNode(lambda.body), lambda.parameters.map(parameter => parameter.name.getText())),
                     ]
                 )
             )

@@ -154,12 +154,6 @@ describe('expression kinds', () => {
                 ExpressionBuilder.constant(1));
         })());
     });
-    test('converts an action', () => {
-        expect(compiledTest.out.default.action).toMatchObject((() => {
-            return ExpressionBuilder.lambda([], 'todo');
-        })());
-        expect(compiledTest.out.default.action.kind).toBe(ExpressionKind.lambda);
-    });
     test('converts a lambda (0 args)', () => {
         expect(compiledTest.out.default.lambda0).toMatchObject((() => {
             return ExpressionBuilder.lambda([], ExpressionBuilder.constant(1));

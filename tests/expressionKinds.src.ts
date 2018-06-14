@@ -32,7 +32,6 @@ export default {
     call0: common.numberExpression(scopeFunction0()),
     call1: common.numberExpression(scopeFunction1(scopeVariable)),
     call2: common.numberExpression(scopeFunction2(scopeVariable, 1)),
-    action: common.actionExpression(() => {}),
     lambda0: common.lambda0Expression(() => 1),
     lambda1: common.lambda1Expression(n => n),
     lambda2: common.lambda2Expression((x, y) => x + y),
