@@ -24,11 +24,17 @@ export function parameter(name: string) {
 export function binary(left: ExpressionBase, operator: BinaryOperator, right: ExpressionBase) {
     return new BinaryExpression(left, operator, right);
 }
+export function equals(left: ExpressionBase, right: ExpressionBase) {
+    return binary(left, BinaryOperator.equals, right);
+}
 export function strictEquals(left: ExpressionBase, right: ExpressionBase) {
     return binary(left, BinaryOperator.strictEquals, right);
 }
-export function equals(left: ExpressionBase, right: ExpressionBase) {
-    return binary(left, BinaryOperator.equals, right);
+export function notEquals(left: ExpressionBase, right: ExpressionBase) {
+    return binary(left, BinaryOperator.notEquals, right);
+}
+export function notStrictEquals(left: ExpressionBase, right: ExpressionBase) {
+    return binary(left, BinaryOperator.notStrictEquals, right);
 }
 export function and(left: ExpressionBase, right: ExpressionBase) {
     return binary(left, BinaryOperator.and, right);

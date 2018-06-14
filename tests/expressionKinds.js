@@ -18,10 +18,13 @@ describe('expression kinds', () => {
     const objectWithProps = {
         prop1: 'str'
     };
-    test('source compiles', () => {
+    test('source compiles and imports', () => {
         compiledTest = exprtests.compile('expressionKinds');
         expect(compiledTest.errors).toHaveLength(0);
     });
+    if (compiledTest.errors.length > 0) {
+        return;
+    }
     test('converts a constant number', () => {
         expect(compiledTest.out.default.constantNumber).toMatchObject((() => {
             return ExpressionBuilder.constant(5);

@@ -18,6 +18,7 @@ export enum BinaryOperator {
     equals,
     strictEquals,
     notEquals,
+    notStrictEquals,
     and,
     or,
     plus,
