@@ -172,6 +172,16 @@ class FileTransformer {
 
     convertNodeToExpressionNode(node: ts.Node): ts.Expression {
         switch (node.kind) {
+            case ts.SyntaxKind.NumericLiteral:
+                return this.convertLiteral(ts.createNumericLiteral, node as ts.NumericLiteral);
+            case ts.SyntaxKind.StringLiteral:
+                return this.convertLiteral(ts.createStringLiteral, node as ts.StringLiteral);
+            case ts.SyntaxKind.TrueKeyword:
+                return this.convertBoolean(true);
+            case ts.SyntaxKind.FalseKeyword:
+                return this.convertBoolean(false);
+            case ts.SyntaxKind.ArrayLiteralExpression:
+
             case ts.SyntaxKind.ArrowFunction:
             case ts.SyntaxKind.FunctionExpression:
                 return this.convertAnonymousFunction(node as ts.FunctionLikeDeclarationBase);
@@ -193,6 +203,39 @@ class FileTransformer {
                 return this.convertCallExpression(node as ts.CallExpression);
         }
         throw new NotSupportedException(`Conversion of node syntax kind '${node.kind}' is not supported`);
+    }
+    convertLiteral(factoryMethod: (text: string) => ts.LiteralExpression, literal: ts.LiteralExpression): ts.Expression {
+        return ts.createCall(
+            ts.createPropertyAccess(
+                this.getBuilderIdentifier(),
+                'constant'),
+            [],
+            [
+                factoryMethod(literal.text)
+            ]
+        )
+    }
+    convertBoolean(b: boolean): ts.Expression {
+        return ts.createCall(
+            ts.createPropertyAccess(
+                this.getBuilderIdentifier(),
+                'constant'),
+            [],
+            [
+                b ? ts.createTrue() : ts.createFalse()
+            ]
+        )
+    }
+    convertArrayLiteral(arrayLiteral: ts.ArrayLiteralExpression): ts.Expression {
+        return ts.createCall(
+            ts.createPropertyAccess(
+                this.getBuilderIdentifier(),
+                'arrayLiteral'),
+            [],
+            [
+                ts.createArrayLiteral(arrayLiteral.elements.map(element => this.convertNodeToExpressionNode(element))),
+            ]
+        )
     }
     convertAnonymousFunction(arrowFunction: ts.FunctionLikeDeclarationBase): ts.Expression {
         return ts.createImmediatelyInvokedArrowFunction([

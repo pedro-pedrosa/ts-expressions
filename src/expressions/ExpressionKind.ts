@@ -3,6 +3,7 @@ export enum ExpressionKind {
     call,
     constant,
     lambda,
+    arrayLiteral,
     objectLiteral,
     parameter,
     propertyAccess,

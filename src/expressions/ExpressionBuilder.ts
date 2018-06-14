@@ -7,6 +7,11 @@ import { ConstantExpression } from './ConstantExpression';
 import { PropertyAssignmentExpression } from './PropertyAssignmentExpression';
 import { ObjectLiteralExpression } from './ObjectLiteralExpression';
 import { CallExpression } from './CallExpression';
+import { ArrayLiteralExpression } from './ArrayLiteralExpression';
+
+export function arrayLiteral(elements: ExpressionBase[]): ArrayLiteralExpression {
+    return new ArrayLiteralExpression(elements);
+}
 
 export function lambda(parameters: ParameterExpression[], body: ExpressionBase): LambdaExpression {
     return new LambdaExpression(parameters, body);
