@@ -1,47 +1,45 @@
 import * as expr from '..';
 import * as common from './lib/common';
 
-const scopeVariable: number = 1;
-function scopeFunction0(): number {
+export const scopeVariable: number = 1;
+export function scopeFunction0(): number {
     return 0;
 }
-function scopeFunction1(x: number): number {
+export function scopeFunction1(x: number): number {
     return 0;
 }
-function scopeFunction2(x: number, y: number): number {
+export function scopeFunction2(x: number, y: number): number {
     return 0;
 }
-const objectWithProps = {
+export const objectWithProps = {
     prop1: 'str'
 };
 
-export default {
-    constantNumber: common.numberExpression(5),
-    constantString: common.stringExpression('str'),
-    constantBoolean: common.booleanExpression(true),
-    emptyArray: common.arrayOfNumberExpression([]),
-    numberArray: common.arrayOfNumberExpression([1, 2, 3, 4]),
-    variableAccess: common.numberExpression(scopeVariable),
-    binaryEquals: common.booleanExpression(scopeVariable == 5),
-    binaryStrictEquals: common.booleanExpression(scopeVariable === 5),
-    binaryNotEquals: common.booleanExpression(scopeVariable != 5),
-    binaryNotStrictEquals: common.booleanExpression(scopeVariable !== 5),
-    binaryAnd: common.booleanExpression(scopeVariable != 1 && scopeVariable == 5),
-    binaryOr: common.booleanExpression(scopeVariable == 1 || scopeVariable == 5),
-    binaryPlus: common.numberExpression(1 + 1),
-    call0: common.numberExpression(scopeFunction0()),
-    call1: common.numberExpression(scopeFunction1(scopeVariable)),
-    call2: common.numberExpression(scopeFunction2(scopeVariable, 1)),
-    lambda0: common.lambda0Expression(() => 1),
-    lambda1: common.lambda1Expression(n => n),
-    lambda2: common.lambda2Expression((x, y) => x + y),
-    objectLiteral: common.objectExpression({
-        strProp: 'str',
-        numberProp: 1
-    }),
-    objectLiteralShorthand: common.objectExpression({
-        scopeVariable,
-        objectWithProps
-    }),
-    propertyAccess: common.stringExpression(objectWithProps.prop1),
-};
+export const constantNumber = common.numberExpression(5);
+export const constantString = common.stringExpression('str');
+export const constantBoolean = common.booleanExpression(true);
+export const emptyArray = common.arrayOfNumberExpression([]);
+export const numberArray = common.arrayOfNumberExpression([1, 2, 3, 4]);
+export const variableAccess = common.numberExpression(scopeVariable);
+export const binaryEquals = common.booleanExpression(scopeVariable == 5);
+export const binaryStrictEquals = common.booleanExpression(scopeVariable === 5);
+export const binaryNotEquals = common.booleanExpression(scopeVariable != 5);
+export const binaryNotStrictEquals = common.booleanExpression(scopeVariable !== 5);
+export const binaryAnd = common.booleanExpression(scopeVariable != 1 && scopeVariable == 5);
+export const binaryOr = common.booleanExpression(scopeVariable == 1 || scopeVariable == 5);
+export const binaryPlus = common.numberExpression(1 + 1);
+export const call0 = common.numberExpression(scopeFunction0());
+export const call1 = common.numberExpression(scopeFunction1(scopeVariable));
+export const call2 = common.numberExpression(scopeFunction2(scopeVariable, 1));
+export const lambda0 = common.lambda0Expression(() => 1);
+export const lambda1 = common.lambda1Expression(n => n);
+export const lambda2 = common.lambda2Expression((x, y) => x + y);
+export const objectLiteral = common.objectExpression({
+    strProp: 'str',
+    numberProp: 1
+});
+export const objectLiteralShorthand = common.objectExpression({
+    scopeVariable,
+    objectWithProps
+});
+export const propertyAccess = common.stringExpression(objectWithProps.prop1);
