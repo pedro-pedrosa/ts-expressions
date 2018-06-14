@@ -20,9 +20,10 @@ describe('expression kinds', () => {
     };
     test('source compiles and imports', () => {
         compiledTest = exprtests.compile('expressionKinds');
+        expect(compiledTest).toBeTruthy();
         expect(compiledTest.errors).toHaveLength(0);
     });
-    if (compiledTest.errors.length > 0) {
+    if (!compiledTest || compiledTest.errors.length > 0) {
         return;
     }
     test('converts a constant number', () => {

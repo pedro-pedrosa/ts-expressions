@@ -42,6 +42,9 @@ export function and(left: ExpressionBase, right: ExpressionBase) {
 export function or(left: ExpressionBase, right: ExpressionBase) {
     return binary(left, BinaryOperator.or, right);
 }
+export function plus(left: ExpressionBase, right: ExpressionBase) {
+    return binary(left, BinaryOperator.plus, right);
+}
 
 export function propertyAccess(expression: ExpressionBase, name: string) {
     return new PropertyAccessExpression(expression, name);
