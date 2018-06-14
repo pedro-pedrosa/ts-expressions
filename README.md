@@ -53,8 +53,8 @@ For example, to work with numeric expressions, you could write the following fun
 ```ts
 import * as expr from 'ts-expressions';
 
-function numeric(expression: expr.Expression<number>);
 function numeric(expression: number);
+function numeric(expression: expr.Expression<number>);
 function numeric(arg: expr.Expression<number> | number) {
   const expression = expr.checkExpressionParameter(arg, 'expression'); //this will check if arg is an expression and will return it, otherwise throws exception
   //do whatever you want with your numeric expression tree
