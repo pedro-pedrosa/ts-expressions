@@ -42,13 +42,18 @@ describe('expression kinds', () => {
     });
     test('converts an empty array', () => {
         expect(compiledTest.out.default.emptyArray).toMatchObject((() => {
-            return 'todo';
+            return ExpressionBuilder.arrayLiteral([]);
         })());
         expect(compiledTest.out.default.emptyArray.kind).toBe(ExpressionKind.arrayLiteral);
     });
     test('converts a number array', () => {
         expect(compiledTest.out.default.numberArray).toMatchObject((() => {
-            return 'todo';
+            return ExpressionBuilder.arrayLiteral([
+                ExpressionBuilder.constant(1),
+                ExpressionBuilder.constant(2),
+                ExpressionBuilder.constant(3),
+                ExpressionBuilder.constant(4),
+            ]);
         })());
         expect(compiledTest.out.default.numberArray.kind).toBe(ExpressionKind.arrayLiteral);
     });
@@ -80,6 +85,14 @@ describe('expression kinds', () => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.constant(scopeVariable),
                 BinaryOperator.notEquals,
+                ExpressionBuilder.constant(5));
+        })());
+    });
+    test('converts a binary not equals', () => {
+        expect(compiledTest.out.default.binaryNotStrictEquals).toMatchObject((() => {
+            return ExpressionBuilder.binary(
+                ExpressionBuilder.constant(scopeVariable),
+                BinaryOperator.notStrictEquals,
                 ExpressionBuilder.constant(5));
         })());
     });
