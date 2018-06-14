@@ -11,31 +11,32 @@ describe('expression kinds', () => {
         expect(compiledTest.errors).toHaveLength(0);
     });
     test('converts a constant number', () => {
-        expect(compiledTest.out.constantNumber).toEqual((() => {
+        const expr = compiledTest.out.constantNumber();
+        expect(expr).toEqual((() => {
             return ExpressionBuilder.constant(5);
         })());
-        expect(compiledTest.out.constantNumber.kind).toBe(ExpressionKind.constant);
+        expect(expr.kind).toBe(ExpressionKind.constant);
     });
     test('converts a constant string', () => {
-        expect(compiledTest.out.constantString).toEqual((() => {
+        expect(compiledTest.out.constantString()).toEqual((() => {
             return ExpressionBuilder.constant('str');
         })());
-        expect(compiledTest.out.constantString.kind).toBe(ExpressionKind.constant);
     });
     test('converts a constant boolean', () => {
-        expect(compiledTest.out.constantBoolean).toEqual((() => {
+        const expr = compiledTest.out.constantBoolean();
+        expect(expr).toEqual((() => {
             return ExpressionBuilder.constant(true);
         })());
-        expect(compiledTest.out.constantBoolean.kind).toBe(ExpressionKind.constant);
     });
     test('converts an empty array', () => {
-        expect(compiledTest.out.emptyArray).toEqual((() => {
+        const expr = compiledTest.out.emptyArray();
+        expect(expr).toEqual((() => {
             return ExpressionBuilder.arrayLiteral([]);
         })());
-        expect(compiledTest.out.emptyArray.kind).toBe(ExpressionKind.arrayLiteral);
+        expect(expr.kind).toBe(ExpressionKind.arrayLiteral);
     });
     test('converts a number array', () => {
-        expect(compiledTest.out.numberArray).toEqual((() => {
+        expect(compiledTest.out.numberArray()).toEqual((() => {
             return ExpressionBuilder.arrayLiteral([
                 ExpressionBuilder.constant(1),
                 ExpressionBuilder.constant(2),
@@ -43,25 +44,24 @@ describe('expression kinds', () => {
                 ExpressionBuilder.constant(4),
             ]);
         })());
-        expect(compiledTest.out.numberArray.kind).toBe(ExpressionKind.arrayLiteral);
     });
     test('converts a variable', () => {
-        expect(compiledTest.out.variableAccess).toEqual((() => {
+        expect(compiledTest.out.variableAccess()).toEqual((() => {
             return ExpressionBuilder.constant(compiledTest.out.scopeVariable);
         })());
-        expect(compiledTest.out.variableAccess.kind).toBe(ExpressionKind.constant);
     });
     test('converts a binary equals', () => {
-        expect(compiledTest.out.binaryEquals).toEqual((() => {
+        const expr = compiledTest.out.binaryEquals();
+        expect(expr).toEqual((() => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.constant(compiledTest.out.scopeVariable),
                 BinaryOperator.equals,
                 ExpressionBuilder.constant(5));
         })());
-        expect(compiledTest.out.binaryEquals.kind).toBe(ExpressionKind.binary);
+        expect(expr.kind).toBe(ExpressionKind.binary);
     });
     test('converts a binary strict equals', () => {
-        expect(compiledTest.out.binaryStrictEquals).toEqual((() => {
+        expect(compiledTest.out.binaryStrictEquals()).toEqual((() => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.constant(compiledTest.out.scopeVariable),
                 BinaryOperator.strictEquals,
@@ -69,7 +69,7 @@ describe('expression kinds', () => {
         })());
     });
     test('converts a binary not equals', () => {
-        expect(compiledTest.out.binaryNotEquals).toEqual((() => {
+        expect(compiledTest.out.binaryNotEquals()).toEqual((() => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.constant(compiledTest.out.scopeVariable),
                 BinaryOperator.notEquals,
@@ -77,7 +77,7 @@ describe('expression kinds', () => {
         })());
     });
     test('converts a binary not strict equals', () => {
-        expect(compiledTest.out.binaryNotStrictEquals).toEqual((() => {
+        expect(compiledTest.out.binaryNotStrictEquals()).toEqual((() => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.constant(compiledTest.out.scopeVariable),
                 BinaryOperator.notStrictEquals,
@@ -85,7 +85,7 @@ describe('expression kinds', () => {
         })());
     });
     test('converts a binary and', () => {
-        expect(compiledTest.out.binaryAnd).toEqual((() => {
+        expect(compiledTest.out.binaryAnd()).toEqual((() => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.binary(
                     ExpressionBuilder.constant(compiledTest.out.scopeVariable),
@@ -99,7 +99,7 @@ describe('expression kinds', () => {
         })());
     });
     test('converts a binary or', () => {
-        expect(compiledTest.out.binaryOr).toEqual((() => {
+        expect(compiledTest.out.binaryOr()).toEqual((() => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.binary(
                     ExpressionBuilder.constant(compiledTest.out.scopeVariable),
@@ -113,29 +113,33 @@ describe('expression kinds', () => {
         })());
     });
     test('converts a binary plus', () => {
-        expect(compiledTest.out.binaryPlus).toEqual((() => {
+        expect(compiledTest.out.binaryPlus()).toEqual((() => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.constant(1),
                 BinaryOperator.plus,
                 ExpressionBuilder.constant(1));
         })());
     });
+    test('binary multiply not implemented', () => {
+        expect(compiledTest.out.binaryMultiply).toThrow();
+    });
     test('converts a call (0 args)', () => {
-        expect(compiledTest.out.call0).toEqual((() => {
+        const expr = compiledTest.out.call0();
+        expect(expr).toEqual((() => {
             return ExpressionBuilder.call(
                 ExpressionBuilder.constant(compiledTest.out.scopeFunction0));
         })());
-        expect(compiledTest.out.call0.kind).toBe(ExpressionKind.call);
+        expect(expr.kind).toBe(ExpressionKind.call);
     });
     test('converts a call (1 arg)', () => {
-        expect(compiledTest.out.call1).toEqual((() => {
+        expect(compiledTest.out.call1()).toEqual((() => {
             return ExpressionBuilder.call(
                 ExpressionBuilder.constant(compiledTest.out.scopeFunction1),
                 ExpressionBuilder.constant(compiledTest.out.scopeVariable));
         })());
     });
     test('converts a call (2 args)', () => {
-        expect(compiledTest.out.call2).toEqual((() => {
+        expect(compiledTest.out.call2()).toEqual((() => {
             return ExpressionBuilder.call(
                 ExpressionBuilder.constant(compiledTest.out.scopeFunction2),
                 ExpressionBuilder.constant(compiledTest.out.scopeVariable),
@@ -143,19 +147,22 @@ describe('expression kinds', () => {
         })());
     });
     test('converts a lambda (0 args)', () => {
-        expect(compiledTest.out.lambda0).toEqual((() => {
+        const expr = compiledTest.out.lambda0();
+        expect(expr).toEqual((() => {
             return ExpressionBuilder.lambda([], ExpressionBuilder.constant(1));
         })());
+        expect(expr.kind).toBe(ExpressionKind.lambda);
     });
     test('converts a lambda (1 arg)', () => {
-        expect(compiledTest.out.lambda1).toEqual((() => {
+        const expr = compiledTest.out.lambda1();
+        expect(expr).toEqual((() => {
             const n = ExpressionBuilder.parameter('n');
             return ExpressionBuilder.lambda([n], n);
         })());
-        expect(compiledTest.out.lambda1.parameters[0].kind).toBe(ExpressionKind.parameter);
+        expect(expr.parameters[0].kind).toBe(ExpressionKind.parameter);
     });
     test('converts a lambda (2 arg)', () => {
-        expect(compiledTest.out.lambda2).toEqual((() => {
+        expect(compiledTest.out.lambda2()).toEqual((() => {
             const x = ExpressionBuilder.parameter('x');
             const y = ExpressionBuilder.parameter('y');
             return ExpressionBuilder.lambda(
@@ -164,17 +171,18 @@ describe('expression kinds', () => {
         })());
     });
     test('converts an object literal', () => {
-        expect(compiledTest.out.objectLiteral).toEqual((() => {
+        const expr = compiledTest.out.objectLiteral();
+        expect(expr).toEqual((() => {
             return ExpressionBuilder.objectLiteral([
                 ExpressionBuilder.propertyAssignment('strProp', ExpressionBuilder.constant('str')),
                 ExpressionBuilder.propertyAssignment('numberProp', ExpressionBuilder.constant(1)),
             ]);
         })());
-        expect(compiledTest.out.objectLiteral.kind).toBe(ExpressionKind.objectLiteral);
-        expect(compiledTest.out.objectLiteral.properties[0].kind).toBe(ExpressionKind.propertyAssignment);
+        expect(expr.kind).toBe(ExpressionKind.objectLiteral);
+        expect(expr.properties[0].kind).toBe(ExpressionKind.propertyAssignment);
     });
     test('converts an object literal with shorthand assignments', () => {
-        expect(compiledTest.out.objectLiteralShorthand).toEqual((() => {
+        expect(compiledTest.out.objectLiteralShorthand()).toEqual((() => {
             return ExpressionBuilder.objectLiteral([
                 ExpressionBuilder.propertyAssignment('scopeVariable', ExpressionBuilder.constant(compiledTest.out.scopeVariable)),
                 ExpressionBuilder.propertyAssignment('objectWithProps', ExpressionBuilder.constant(compiledTest.out.objectWithProps)),
@@ -182,11 +190,12 @@ describe('expression kinds', () => {
         })());
     });
     test('converts a property access', () => {
-        expect(compiledTest.out.propertyAccess).toEqual((() => {
+        const expr = compiledTest.out.propertyAccess();
+        expect(expr).toEqual((() => {
             return ExpressionBuilder.propertyAccess(
                 ExpressionBuilder.constant(compiledTest.out.objectWithProps),
                 'prop1');
         })());
-        expect(compiledTest.out.propertyAccess.kind).toBe(ExpressionKind.propertyAccess);
+        expect(expr.kind).toBe(ExpressionKind.propertyAccess);
     });
 });

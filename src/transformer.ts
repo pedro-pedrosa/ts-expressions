@@ -55,7 +55,7 @@ class FileTransformer {
                     node.expression, 
                     [],
                     expressionOverload.parameters.map((parameter, i) => this.isTypeNodeExpressionType(parameter.type) && !this.isTypeExpressionType(this.typeChecker.getTypeAtLocation(node.arguments[i])) ? 
-                        this.convertNodeToExpressionNode(node.arguments[i]) : 
+                        this.convertExpression(node.arguments[i]) : 
                         (this.visit(node.arguments[i]) as ts.Expression))
                 )
             }
@@ -170,6 +170,15 @@ class FileTransformer {
         }
     }
 
+    convertExpression(node: ts.Node): ts.Expression {
+        try {
+            return this.convertNodeToExpressionNode(node);
+        }
+        catch {
+            //TODO: report these errors somehow
+            return this.visit(node) as ts.Expression;
+        }
+    }
     convertNodeToExpressionNode(node: ts.Node): ts.Expression {
         switch (node.kind) {
             case ts.SyntaxKind.NumericLiteral:
