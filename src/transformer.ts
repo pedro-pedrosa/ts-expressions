@@ -171,41 +171,28 @@ class FileTransformer {
     }
 
     convertNodeToExpressionNode(node: ts.Node): ts.Expression {
-        if (ts.isArrowFunction(node) || ts.isFunctionExpression(node)) {
-            return this.convertAnonymousFunction(node);
+        switch (node.kind) {
+            case ts.SyntaxKind.ArrowFunction:
+            case ts.SyntaxKind.FunctionExpression:
+                return this.convertAnonymousFunction(node as ts.FunctionLikeDeclarationBase);
+            case ts.SyntaxKind.BinaryExpression:
+                return this.convertBinaryExpression(node as ts.BinaryExpression);
+            case ts.SyntaxKind.PropertyAccessExpression:
+                return this.convertPropertyAccessExpression(node as ts.PropertyAccessExpression);
+            case ts.SyntaxKind.Identifier:
+                return this.convertIdentifier(node as ts.Identifier);
+            case ts.SyntaxKind.ParenthesizedExpression:
+                return this.convertParenthesizedExpression(node as ts.ParenthesizedExpression);
+            case ts.SyntaxKind.ObjectLiteralExpression:
+                return this.convertObjectLiteralExpression(node as ts.ObjectLiteralExpression);
+            case ts.SyntaxKind.PropertyAssignment:
+                return this.convertPropertyAssignment(node as ts.PropertyAssignment);
+            case ts.SyntaxKind.ShorthandPropertyAssignment:
+                return this.convertShorthandPropertyAssignment(node as ts.ShorthandPropertyAssignment);
+            case ts.SyntaxKind.CallExpression:
+                return this.convertCallExpression(node as ts.CallExpression);
         }
-        else if (ts.isBinaryExpression(node)) {
-            return this.convertBinaryExpression(node);
-        }
-        else if (ts.isPropertyAccessExpression(node)) {
-            return this.convertPropertyAccessExpression(node);
-        }
-        else if (ts.isIdentifier(node)) {
-            return this.convertIdentifier(node);
-        }
-        else if (ts.isParenthesizedExpression(node)) {
-            return this.convertParenthesizedExpression(node);
-        }
-        else if (ts.isObjectLiteralExpression(node)) {
-            return this.convertObjectLiteralExpression(node);
-        }
-        else if (ts.isPropertyAssignment(node)) {
-            return this.convertPropertyAssignment(node);
-        }
-        else if (ts.isShorthandPropertyAssignment(node)) {
-            return this.convertShorthandPropertyAssignment(node);
-        }
-        else if (ts.isCallExpression(node)) {
-            //TODO: also accept types implementing Expression
-            if (ts.isPropertyAccessExpression(node.expression) && 
-                node.expression.name.getText() == 'invoke' && 
-                this.isConstantExpression(node.expression.expression) &&
-                this.isTypeExpressionType(this.typeChecker.getTypeAtLocation(node.expression.expression))) {
-                return this.convertLambdaExpressionInvoke(node);
-            }
-            return this.convertCallExpression(node);
-        }
-        throw new NotSupportedException();
+        throw new NotSupportedException(`Conversion of node syntax kind '${node.kind}' is not supported`);
     }
     convertAnonymousFunction(arrowFunction: ts.FunctionLikeDeclarationBase): ts.Expression {
         return ts.createImmediatelyInvokedArrowFunction([
@@ -331,6 +318,13 @@ class FileTransformer {
         );
     }
     convertCallExpression(callExpression: ts.CallExpression): ts.Expression {
+        //TODO: also accept types implementing Expression
+        if (ts.isPropertyAccessExpression(callExpression.expression) && 
+            callExpression.expression.name.getText() == 'invoke' && 
+            this.isConstantExpression(callExpression.expression.expression) &&
+            this.isTypeExpressionType(this.typeChecker.getTypeAtLocation(callExpression.expression.expression))) {
+            return this.convertLambdaExpressionInvoke(callExpression);
+        }
         return ts.createCall(
             ts.createPropertyAccess(
                 this.getBuilderIdentifier(),
