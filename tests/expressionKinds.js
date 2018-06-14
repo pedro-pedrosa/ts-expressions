@@ -23,9 +23,6 @@ describe('expression kinds', () => {
         expect(compiledTest).toBeTruthy();
         expect(compiledTest.errors).toHaveLength(0);
     });
-    if (!compiledTest || compiledTest.errors.length > 0) {
-        return;
-    }
     test('converts a constant number', () => {
         expect(compiledTest.out.default.constantNumber).toMatchObject((() => {
             return ExpressionBuilder.constant(5);
@@ -135,6 +132,21 @@ describe('expression kinds', () => {
                 BinaryOperator.plus,
                 ExpressionBuilder.constant(1));
         })());
+    });
+    test('wtf', () => {
+        expect(ExpressionBuilder.call(
+            ExpressionBuilder.constant(scopeFunction2),
+            ExpressionBuilder.constant(scopeVariable),
+            ExpressionBuilder.constant(1))).toMatchObject((() => {
+            return ExpressionBuilder.call(
+                ExpressionBuilder.constant(scopeFunction2),
+                ExpressionBuilder.constant(scopeVariable),
+                ExpressionBuilder.constant(1));
+        })());
+    });
+    test('converts a call (-1 args)', () => {
+        expect(compiledTest.out.default.call0).toMatchObject(ExpressionBuilder.call(ExpressionBuilder.constant(scopeFunction0)));
+        expect(compiledTest.out.default.call0.kind).toBe(ExpressionKind.call);
     });
     test('converts a call (0 args)', () => {
         expect(compiledTest.out.default.call0).toMatchObject((() => {

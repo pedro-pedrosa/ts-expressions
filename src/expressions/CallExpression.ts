@@ -7,7 +7,7 @@ export class CallExpression extends ExpressionBase {
         this.calleeExpresion = calleeExpresion;
         this.arguments = args;
     }
-    kind = ExpressionKind.binary;
+    kind = ExpressionKind.call;
     calleeExpresion: ExpressionBase;
     arguments: ExpressionBase[];
 }
