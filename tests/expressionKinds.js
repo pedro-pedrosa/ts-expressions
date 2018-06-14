@@ -88,7 +88,7 @@ describe('expression kinds', () => {
                 ExpressionBuilder.constant(5));
         })());
     });
-    test('converts a binary not equals', () => {
+    test('converts a binary not strict equals', () => {
         expect(compiledTest.out.default.binaryNotStrictEquals).toMatchObject((() => {
             return ExpressionBuilder.binary(
                 ExpressionBuilder.constant(scopeVariable),
