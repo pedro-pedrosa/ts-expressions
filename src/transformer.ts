@@ -284,14 +284,20 @@ class FileTransformer {
     }
     getBinaryOperatorFunction(op: ts.BinaryOperator): string {
         switch (op) {
-            case ts.SyntaxKind.EqualsEqualsEqualsToken:
-                return 'strictEquals';
             case ts.SyntaxKind.EqualsEqualsToken:
                 return 'equals';
+            case ts.SyntaxKind.EqualsEqualsEqualsToken:
+                return 'strictEquals';
+            case ts.SyntaxKind.ExclamationEqualsToken:
+                return 'notEquals';
+            case ts.SyntaxKind.ExclamationEqualsEqualsToken:
+                return 'notStrictEquals';
             case ts.SyntaxKind.AmpersandAmpersandToken:
                 return 'and';
             case ts.SyntaxKind.BarBarToken:
                 return 'or';
+            case ts.SyntaxKind.PlusToken:
+                return 'plus';
             default:
                 throw new NotSupportedException();
         }
