@@ -2,7 +2,7 @@
 A TypeScript transformer to convert TypeScript expressions into equivalent expression trees
 
 ## Description
-ts-expressions is a TypeScript transformer that helps you get information about an expression at run-time by creating an object structure representing that expression at compile-time.
+`ts-expressions` is a TypeScript transformer that helps you get information about an expression at run-time by creating an object structure representing that expression at compile-time.
 
 ## How to install
 ```
@@ -10,9 +10,9 @@ npm i ts-expressions
 ```
 
 ## How does it work
-The transformer provided by ts-expressions will analyze TypeScript code and look for calls to functions that contain an overload which declares parameters of type `Expression`. If the function call being analyzed is passing arguments of types other than `Expression`, those arguments are converted to expressions during the compilation of the program.
+The transformer provided by `ts-expressions` will analyze TypeScript code and look for calls to functions that contain an overload which declares parameters of type `Expression`. If the function call being analyzed is passing arguments of types other than `Expression`, those arguments are converted to expressions during the compilation of the program.
 
-You will need to use a custom TypeScript compiler to make use of the ts-expressions transformer. You can use [ttypescript](https://github.com/cevek/ttypescript) to compile your program using the following configuration in `ts.config`:
+You will need to use a custom TypeScript compiler to make use of the `ts-expressions` transformer. You can use [ttypescript](https://github.com/cevek/ttypescript) to compile your program using the following configuration in `ts.config`:
 
 ```json
 {
