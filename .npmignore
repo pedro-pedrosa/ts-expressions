@@ -1,5 +1,5 @@
 .vscode
-src
-tests
+/src
+/tests
 .gitignore
 tsconfig.json
