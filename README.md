@@ -46,7 +46,7 @@ const result = program.emit(undefined, undefined, undefined, false, {
 It is currently not supported to use the out-of-the-box TypeScript compiler `tsc` with this plug-in. You can [show some love here](https://github.com/Microsoft/TypeScript/issues/14419) if you'd like to see plugin support built into the TypeScript compiler.
 
 ## How to use
-To declare a function that accepts expressions, you must declare one overload that uses a parameter of type `Expression` and another overload that uses a parameter of the type of expression you want to work with.
+To declare a function that accepts expressions, you must declare one signature overload that uses parameters of type `Expression<T>` and another overload equivalent signature that uses parameters of type `T` which will be used by callers. `ts-expressions` will only convert supported expressions.
 
 For example, to work with numeric expressions, you could write the following function:
 
@@ -73,4 +73,38 @@ Which would be translated by the transformer to:
 import * as builder from 'ts-expressions/lib/expressions/ExpressionBuilder';
 
 numeric(builder.binary(builder.constant(5), BinaryOperator.plus, builder.constant(1));
+```
+
+Note that `ts-expressions` will only match overload signatures with the same number of parameters and where parameters in have compatible expression types.
+
+The following examples work:
+
+```ts
+function a(expression: number);
+function a(expression: expr.Expression<number>);
+function a(arg: any) { }
+
+function b(p1: string, expression: number);
+function b(p1: string, expression: expr.Expression<number>);
+function b(p1: string, arg: any) { }
+
+function c(p1: string, expression1: string, expression2: boolean);
+function c(p1: string, expression1: expr.Expression<string>, expression2: expr.Expression<boolean>);
+function c(p1: string, arg1: any, arg2: any) { }
+```
+
+The following examples will not work:
+
+```ts
+function a(expression: number);
+function a(expression: expr.Expression<string>);
+function a(arg: any) { }
+
+function b(p1: string, expression: number);
+function b(expression: expr.Expression<number>, p1: string);
+function b(p1: string, arg: any) { }
+
+function c(p1: string, expression1: string);
+function c(p1: string, expression1: expr.Expression<string>, expression2: expr.Expression<boolean>);
+function c(p1: string, arg1: any, arg2: any) { }
 ```
