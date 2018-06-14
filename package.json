@@ -1,6 +1,6 @@
 {
   "name": "ts-expressions",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A TypeScript transformer to convert TypeScript expressions into equivalent expression trees",
   "main": "lib/index.js",
   "directories": {
