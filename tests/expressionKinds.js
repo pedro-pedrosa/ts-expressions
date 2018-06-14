@@ -165,8 +165,16 @@ describe('expression kinds', () => {
             ]);
         })());
     });
-    test('converts an object literal', () => {
-        expect(compiledTest.out.default.objectLiteral).toMatchObject((() => {
+    test('converts an object literal with shorthand assignments', () => {
+        expect(compiledTest.out.default.objectLiteralShorthand).toMatchObject((() => {
+            return ExpressionBuilder.objectLiteral([
+                ExpressionBuilder.propertyAssignment('scopeVariable', ExpressionBuilder.constant(scopeVariable)),
+                ExpressionBuilder.propertyAssignment('objectWithProps', ExpressionBuilder.constant(objectWithProps)),
+            ]);
+        })());
+    });
+    test('converts a property access', () => {
+        expect(compiledTest.out.default.propertyAccess).toMatchObject((() => {
             return ExpressionBuilder.propertyAccess(
                 ExpressionBuilder.constant(objectWithProps),
                 'prop1');

@@ -39,5 +39,9 @@ export default {
         strProp: 'str',
         numberProp: 1
     }),
+    objectLiteralShorthand: common.objectExpression({
+        scopeVariable,
+        objectWithProps
+    }),
     propertyAccess: common.stringExpression(objectWithProps.prop1),
 };
