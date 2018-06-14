@@ -1,5 +1,5 @@
 export class NotSupportedException extends Error {
-    constructor() {
-        super('This feature is currently not supported');
+    constructor(message?: string) {
+        super(message || 'This feature is currently not supported');
     }
 }
