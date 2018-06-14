@@ -46,7 +46,7 @@ const result = program.emit(undefined, undefined, undefined, false, {
 It is currently not supported to use the out-of-the-box TypeScript compiler `tsc` with this plug-in. You can [show some love here](https://github.com/Microsoft/TypeScript/issues/14419) if you'd like to see plugin support built into the TypeScript compiler.
 
 ## How to use
-To declare a function that accepts expressions, you must declare one signature overload that uses parameters of type `Expression<T>` and another overload equivalent signature that uses parameters of type `T` which will be used by callers. `ts-expressions` will only convert supported expressions.
+To declare a function that accepts expressions, you must declare one signature overload that uses parameters of type `Expression<T>` and another equivalent overload signature that uses parameters of type `T` which will be used by callers. `ts-expressions` will only convert supported expressions.
 
 For example, to work with numeric expressions, you could write the following function:
 
@@ -75,7 +75,7 @@ import * as builder from 'ts-expressions/lib/expressions/ExpressionBuilder';
 numeric(builder.binary(builder.constant(5), BinaryOperator.plus, builder.constant(1));
 ```
 
-Note that `ts-expressions` will only match overload signatures with the same number of parameters and where parameters in have compatible expression types.
+Note that `ts-expressions` will only match overload signatures with the same number of parameters and where parameters have compatible expression types.
 
 The following examples work:
 
