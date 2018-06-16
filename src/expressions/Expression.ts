@@ -1,13 +1,32 @@
-import { ExpressionKind } from './ExpressionKind';
+import { ArrayLiteralExpression } from './ArrayLiteralExpression';
+import { BinaryExpression } from './BinaryExpression';
+import { CallExpression } from './CallExpression';
+import { ConstantExpression } from './ConstantExpression';
+import { LambdaExpression } from './LambdaExpression';
+import { ObjectLiteralExpression } from './ObjectLiteralExpression';
+import { ParameterExpression } from './ParameterExpression';
+import { PropertyAccessExpression } from './PropertyAccessExpression';
+import { PropertyAssignmentExpression } from './PropertyAssignmentExpression';
 
 export const expressionSymbol = Symbol();
 
 export interface Expression<T> {
     [expressionSymbol]: T;
-    kind: ExpressionKind;
+    root: ExpressionNode;
 }
 
-export abstract class ExpressionBase implements Expression<{}> {
-    [expressionSymbol] = {};
-    abstract kind: ExpressionKind;
+export type ExpressionNode = ArrayLiteralExpression | BinaryExpression | CallExpression | 
+    ConstantExpression | LambdaExpression | ObjectLiteralExpression | ParameterExpression |
+    PropertyAccessExpression | PropertyAssignmentExpression;
+
+export enum ExpressionKind {
+    binary,
+    call,
+    constant,
+    lambda,
+    arrayLiteral,
+    objectLiteral,
+    parameter,
+    propertyAccess,
+    propertyAssignment
 }

@@ -1,11 +1,6 @@
-import { ExpressionBase } from './Expression';
-import { ExpressionKind } from './ExpressionKind';
+import { ExpressionKind, ExpressionNode } from './Expression';
 
-export class ArrayLiteralExpression extends ExpressionBase {
-    constructor(elements: ExpressionBase[]) {
-        super();
-        this.elements = elements;
-    }
-    kind = ExpressionKind.arrayLiteral;
-    elements: ExpressionBase[];
+export interface ArrayLiteralExpression {
+    kind: ExpressionKind.arrayLiteral;
+    elements: ExpressionNode[];
 }

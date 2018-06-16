@@ -172,7 +172,16 @@ class FileTransformer {
 
     convertExpression(node: ts.Node): ts.Expression {
         try {
-            return this.convertNodeToExpressionNode(node);
+            return ts.createCall(
+                ts.createPropertyAccess(
+                    this.getBuilderIdentifier(),
+                    'createExpression'),
+                [],
+                [
+                    ts.createObjectLiteral([]),
+                    this.convertNodeToExpressionNode(node)
+                ]
+            )
         }
         catch {
             //TODO: report these errors somehow

@@ -72,7 +72,11 @@ Which would be translated by the transformer to:
 ```ts
 import * as builder from 'ts-expressions/lib/expressions/ExpressionBuilder';
 
-numeric(builder.binary(builder.constant(5), BinaryOperator.plus, builder.constant(1));
+numeric(builder.createExpression(
+  builder.binary(
+    builder.constant(5), 
+    BinaryOperator.plus, 
+    builder.constant(1))));
 ```
 
 Note that `ts-expressions` will only match overload signatures with the same number of parameters and where parameters have compatible expression types.

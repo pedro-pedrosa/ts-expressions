@@ -1,13 +1,7 @@
-import { ExpressionBase } from './Expression';
-import { ExpressionKind } from './ExpressionKind';
+import { ExpressionNode, ExpressionKind } from './Expression';
 
-export class PropertyAssignmentExpression extends ExpressionBase {
-    constructor(name: string, expression: ExpressionBase) {
-        super();
-        this.name = name;
-        this.expression = expression;
-    }
-    kind = ExpressionKind.propertyAssignment;
+export interface PropertyAssignmentExpression {
+    kind: ExpressionKind.propertyAssignment;
     name: string;
-    expression: ExpressionBase;
+    expression: ExpressionNode;
 }

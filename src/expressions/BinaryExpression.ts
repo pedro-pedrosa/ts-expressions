@@ -1,17 +1,10 @@
-import { ExpressionBase } from './Expression';
-import { ExpressionKind } from './ExpressionKind';
+import { ExpressionNode, ExpressionKind } from './Expression';
 
-export class BinaryExpression extends ExpressionBase {
-    constructor(left: ExpressionBase, operator: BinaryOperator, right: ExpressionBase) {
-        super();
-        this.left = left;
-        this.operator = operator;
-        this.right = right;
-    }
-    kind = ExpressionKind.binary;
-    left: ExpressionBase;
+export interface BinaryExpression {
+    kind: ExpressionKind.binary;
+    left: ExpressionNode;
     operator: BinaryOperator;
-    right: ExpressionBase;
+    right: ExpressionNode;
 }
 
 export enum BinaryOperator {

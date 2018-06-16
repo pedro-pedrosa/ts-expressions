@@ -1,21 +1,8 @@
-import { ExpressionBase } from './Expression';
 import { ParameterExpression } from './ParameterExpression';
-import { checkExpressionParameter } from '../utilities';
-import { ExpressionKind } from './ExpressionKind';
+import { ExpressionNode, ExpressionKind } from './Expression';
 
-export class LambdaExpression extends ExpressionBase {
-    constructor(parameters: ParameterExpression[], body: ExpressionBase) {
-        super();
-        this.parameters = parameters;
-        this.body = body;
-    }
-    kind = ExpressionKind.lambda;
+export interface LambdaExpression {
+    kind: ExpressionKind.lambda;
     parameters: ParameterExpression[];
-    body: ExpressionBase;
-    
-    static create(lambda: (...args: any[]) => any): LambdaExpression;
-    static create(expression: LambdaExpression): LambdaExpression;
-    static create(expression: object): LambdaExpression {
-        return checkExpressionParameter(expression, 'expression') as LambdaExpression;
-    }
+    body: ExpressionNode;
 }

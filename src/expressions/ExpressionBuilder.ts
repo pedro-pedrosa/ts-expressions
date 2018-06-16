@@ -1,4 +1,4 @@
-import { ExpressionBase } from './Expression';
+import { Expression, expressionSymbol, ExpressionNode, ExpressionKind } from './Expression';
 import { LambdaExpression } from './LambdaExpression';
 import { ParameterExpression } from './ParameterExpression';
 import { BinaryOperator, BinaryExpression } from './BinaryExpression';
@@ -9,59 +9,99 @@ import { ObjectLiteralExpression } from './ObjectLiteralExpression';
 import { CallExpression } from './CallExpression';
 import { ArrayLiteralExpression } from './ArrayLiteralExpression';
 
-export function arrayLiteral(elements: ExpressionBase[]): ArrayLiteralExpression {
-    return new ArrayLiteralExpression(elements);
+export function createExpression<T>(expression: T, rootNode: ExpressionNode): Expression<T> {
+    return {
+        [expressionSymbol]: expression,
+        root: rootNode,
+    };
 }
 
-export function lambda(parameters: ParameterExpression[], body: ExpressionBase): LambdaExpression {
-    return new LambdaExpression(parameters, body);
+export function arrayLiteral(elements: ExpressionNode[]): ArrayLiteralExpression {
+    return {
+        kind: ExpressionKind.arrayLiteral,
+        elements,
+    };
 }
 
-export function parameter(name: string) {
-    return new ParameterExpression(name);
+export function lambda(parameters: ParameterExpression[], body: ExpressionNode): LambdaExpression {
+    return {
+        kind: ExpressionKind.lambda,
+        parameters,
+        body
+    };
 }
 
-export function binary(left: ExpressionBase, operator: BinaryOperator, right: ExpressionBase) {
-    return new BinaryExpression(left, operator, right);
+export function parameter(name: string): ParameterExpression {
+    return {
+        kind: ExpressionKind.parameter,
+        name,
+    };
 }
-export function equals(left: ExpressionBase, right: ExpressionBase) {
+
+export function binary(left: ExpressionNode, operator: BinaryOperator, right: ExpressionNode): BinaryExpression {
+    return {
+        kind: ExpressionKind.binary,
+        left,
+        operator,
+        right
+    };
+}
+export function equals(left: ExpressionNode, right: ExpressionNode) {
     return binary(left, BinaryOperator.equals, right);
 }
-export function strictEquals(left: ExpressionBase, right: ExpressionBase) {
+export function strictEquals(left: ExpressionNode, right: ExpressionNode) {
     return binary(left, BinaryOperator.strictEquals, right);
 }
-export function notEquals(left: ExpressionBase, right: ExpressionBase) {
+export function notEquals(left: ExpressionNode, right: ExpressionNode) {
     return binary(left, BinaryOperator.notEquals, right);
 }
-export function notStrictEquals(left: ExpressionBase, right: ExpressionBase) {
+export function notStrictEquals(left: ExpressionNode, right: ExpressionNode) {
     return binary(left, BinaryOperator.notStrictEquals, right);
 }
-export function and(left: ExpressionBase, right: ExpressionBase) {
+export function and(left: ExpressionNode, right: ExpressionNode) {
     return binary(left, BinaryOperator.and, right);
 }
-export function or(left: ExpressionBase, right: ExpressionBase) {
+export function or(left: ExpressionNode, right: ExpressionNode) {
     return binary(left, BinaryOperator.or, right);
 }
-export function plus(left: ExpressionBase, right: ExpressionBase) {
+export function plus(left: ExpressionNode, right: ExpressionNode) {
     return binary(left, BinaryOperator.plus, right);
 }
 
-export function propertyAccess(expression: ExpressionBase, name: string) {
-    return new PropertyAccessExpression(expression, name);
+export function propertyAccess(expression: ExpressionNode, name: string): PropertyAccessExpression {
+    return {
+        kind: ExpressionKind.propertyAccess,
+        expression,
+        name
+    };
 }
 
-export function constant(value: any) {
-    return new ConstantExpression(value);
+export function constant(value: any): ConstantExpression {
+    return {
+        kind: ExpressionKind.constant,
+        value
+    };
 }
 
-export function objectLiteral(properties: PropertyAssignmentExpression[]) {
-    return new ObjectLiteralExpression(properties);
+export function objectLiteral(properties: PropertyAssignmentExpression[]): ObjectLiteralExpression {
+    return {
+        kind: ExpressionKind.objectLiteral,
+        properties,
+    };
 }
 
-export function propertyAssignment(name: string, expression:ExpressionBase) {
-    return new PropertyAssignmentExpression(name, expression);
+export function propertyAssignment(name: string, expression: ExpressionNode): PropertyAssignmentExpression {
+    return {
+        kind: ExpressionKind.propertyAssignment,
+        name,
+        expression
+    };
 }
 
-export function call(calleeExpression: ExpressionBase, ...args: ExpressionBase[]) {
-    return new CallExpression(calleeExpression, ...args);
+export function call(callee: ExpressionNode, ...args: ExpressionNode[]): CallExpression {
+    return {
+        kind: ExpressionKind.call,
+        callee,
+        arguments: args
+    };
 }

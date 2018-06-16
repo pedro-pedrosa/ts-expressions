@@ -1,12 +1,7 @@
-import { ExpressionBase } from './Expression';
 import { PropertyAssignmentExpression } from './PropertyAssignmentExpression';
-import { ExpressionKind } from './ExpressionKind';
+import { ExpressionKind } from './Expression';
 
-export class ObjectLiteralExpression extends ExpressionBase {
-    constructor(properties: PropertyAssignmentExpression[]) {
-        super();
-        this.properties = properties;
-    }
-    kind = ExpressionKind.objectLiteral;
+export interface ObjectLiteralExpression {
+    kind: ExpressionKind.objectLiteral;
     properties: PropertyAssignmentExpression[];
 }

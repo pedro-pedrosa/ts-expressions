@@ -1,11 +1,6 @@
-import { ExpressionBase } from './Expression';
-import { ExpressionKind } from './ExpressionKind';
+import { ExpressionKind } from './Expression';
 
-export class ConstantExpression extends ExpressionBase {
-    constructor(value: any) {
-        super();
-        this.value = value;
-    }
-    kind = ExpressionKind.constant;
+export interface ConstantExpression {
+    kind: ExpressionKind.constant;
     value: any;
 }

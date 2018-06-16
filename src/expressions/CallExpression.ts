@@ -1,13 +1,7 @@
-import { ExpressionBase } from './Expression';
-import { ExpressionKind } from './ExpressionKind';
+import { ExpressionNode, ExpressionKind } from './Expression';
 
-export class CallExpression extends ExpressionBase {
-    constructor(calleeExpresion: ExpressionBase, ...args: ExpressionBase[]) {
-        super();
-        this.calleeExpresion = calleeExpresion;
-        this.arguments = args;
-    }
-    kind = ExpressionKind.call;
-    calleeExpresion: ExpressionBase;
-    arguments: ExpressionBase[];
+export interface CallExpression {
+    kind: ExpressionKind.call;
+    callee: ExpressionNode;
+    arguments: ExpressionNode[];
 }

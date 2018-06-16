@@ -4,7 +4,6 @@ export * from './BinaryExpression';
 export * from './CallExpression';
 export * from './ConstantExpression';
 export * from './LambdaExpression';
-export * from './ExpressionKind';
 export * from './ObjectLiteralExpression';
 export * from './ParameterExpression';
 export * from './PropertyAccessExpression';
