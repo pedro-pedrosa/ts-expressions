@@ -1,22 +1,26 @@
 import * as ts from 'typescript';
 import { NotSupportedException } from './exceptions/NotSupportedException';
 
-export default function transformer(program: ts.Program, tsExpressionsModulePath?: string): ts.TransformerFactory<ts.SourceFile> {
-    return (context: ts.TransformationContext) => (file: ts.SourceFile) => new FileTransformer(program, context, file, tsExpressionsModulePath).transformFile();
+export interface Config {
+    modulePath?: string;
+}
+
+export default function transformer(program: ts.Program, config?: Config): ts.TransformerFactory<ts.SourceFile> {
+    return (context: ts.TransformationContext) => (file: ts.SourceFile) => new FileTransformer(program, context, file, config).transformFile();
 }
 
 class FileTransformer {
-    constructor(program: ts.Program, context: ts.TransformationContext, file: ts.SourceFile, tsExpressionsModulePath?: string) {
+    constructor(program: ts.Program, context: ts.TransformationContext, file: ts.SourceFile, config?: Config) {
         this.program = program;
         this.context = context;
         this.file = file;
-        this.tsExpressionsModulePath = tsExpressionsModulePath;
+        this.config = config;
         this.builderIdentifier = null;
     }
     private program: ts.Program;
     private context: ts.TransformationContext;
     private file: ts.SourceFile;
-    private tsExpressionsModulePath: string;
+    private config: Config;
     private typeChecker: ts.TypeChecker;
     private scopeStack: Set<string>[];
     private builderIdentifier: ts.Identifier;
@@ -40,7 +44,7 @@ class FileTransformer {
                 ts.createVariableStatement(
                     [],
                     ts.createVariableDeclarationList(
-                        [ ts.createVariableDeclaration(this.builderIdentifier, undefined, ts.createCall(ts.createIdentifier('require'), [], [ ts.createLiteral((this.tsExpressionsModulePath || 'ts-expressions') + '/lib/expressions/ExpressionBuilder') ]))]
+                        [ ts.createVariableDeclaration(this.builderIdentifier, undefined, ts.createCall(ts.createIdentifier('require'), [], [ ts.createLiteral((this.config && this.config.modulePath || 'ts-expressions') + '/lib/expressions/ExpressionBuilder') ]))]
                     )
                 ),
                 ...visitedStatements
