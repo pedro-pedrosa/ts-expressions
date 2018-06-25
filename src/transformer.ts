@@ -67,15 +67,33 @@ class FileTransformer {
         return ts.visitEachChild(node, child => this.visit(child), this.context);
     }
 
-    getCompatibleOverloadDeclarations(declaration: ts.FunctionLikeDeclarationBase): ts.FunctionLikeDeclarationBase[] {
+    getBestExpressionOverloadDeclarationFromCallExpression(callExpression: ts.CallExpression): ts.SignatureDeclarationBase {
+        const signature = this.typeChecker.getResolvedSignature(callExpression);
+        if (!signature || (!ts.isFunctionDeclaration(signature.declaration) && !ts.isMethodDeclaration(signature.declaration) && !ts.isMethodSignature(signature.declaration))) {
+            return undefined;
+        }
+        const bestOverload = this.getCompatibleOverloadDeclarations(signature.declaration)
+            .map(overload => ({
+                overload,
+                convertibleParameters: overload.parameters.filter((p, i) => this.isParameterConvertible((signature.declaration as ts.FunctionLikeDeclarationBase).parameters[i], p)).length,
+            }))
+            .reduce((best, current) => (!best || current.convertibleParameters > best.convertibleParameters) ? current : best, undefined);
+        return bestOverload ? bestOverload.overload : undefined;
+    }
+    getCompatibleOverloadDeclarations(declaration: ts.SignatureDeclarationBase): ts.SignatureDeclarationBase[] {
         if (!declaration.name) {
             return [];
         }
-        let delcarationsInScope: ts.FunctionLikeDeclarationBase[] = null;
+        let delcarationsInScope: ts.SignatureDeclarationBase[] = null;
         if (ts.isMethodDeclaration(declaration) && ts.isClassDeclaration(declaration.parent)) {
             delcarationsInScope = declaration.parent.members
                 .filter(child => ts.isMethodDeclaration(child))
                 .map(child => child as ts.MethodDeclaration);
+        }
+        else if (ts.isMethodSignature(declaration) && ts.isInterfaceDeclaration(declaration.parent)) {
+            delcarationsInScope = declaration.parent.members
+                .filter(child => ts.isMethodSignature(child))
+                .map(child => child as ts.MethodSignature);
         }
         else if (ts.isFunctionDeclaration(declaration)) {
             //TODO: support function declarations in sub-scopes
@@ -93,19 +111,6 @@ class FileTransformer {
                 d.name && d.name.getText() == declaration.name.getText() &&
                 d.parameters.length == declaration.parameters.length &&
                 d.parameters.every((p, i) => this.isParameterSameType(declaration.parameters[i], p) || this.isParameterConvertible(declaration.parameters[i], p)));
-    }
-    getBestExpressionOverloadDeclarationFromCallExpression(callExpression: ts.CallExpression): ts.FunctionLikeDeclarationBase {
-        const signature = this.typeChecker.getResolvedSignature(callExpression);
-        if (!signature || (!ts.isFunctionDeclaration(signature.declaration) && !ts.isMethodDeclaration(signature.declaration))) {
-            return undefined;
-        }
-        const bestOverload = this.getCompatibleOverloadDeclarations(signature.declaration)
-            .map(overload => ({
-                overload,
-                convertibleParameters: overload.parameters.filter((p, i) => this.isParameterConvertible((signature.declaration as ts.FunctionLikeDeclarationBase).parameters[i], p)).length,
-            }))
-            .reduce((best, current) => (!best || current.convertibleParameters > best.convertibleParameters) ? current : best, undefined);
-        return bestOverload ? bestOverload.overload : undefined;
     }
 
     isSameType(t1: ts.TypeNode, t2: ts.TypeNode) {

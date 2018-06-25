@@ -50,3 +50,26 @@ export const objectLiteralShorthand = () => common.objectExpression({
     objectWithProps
 });
 export const propertyAccess = () => common.stringExpression(objectWithProps.prop1);
+export const other = () => new DataSourceBase<{}>().filter(e => true).map(e => 'asd');
+
+
+export interface IDataSource<T> {
+    filter(predicate: expr.Expression<(element: T) => boolean>): IDataSource<T>;
+    filter(predicate: (element: T) => boolean): IDataSource<T>;
+    map<K>(projection: expr.Expression<(element: T) => K>): IDataSource<K>;
+    map<K>(projection: (element: T) => K): IDataSource<K>;
+}
+
+export class DataSourceBase<T = any> implements IDataSource<T> {
+
+    filter(predicate: expr.Expression<(element: T) => boolean>): IDataSource<T>;
+    filter(predicate: (element: T) => boolean): IDataSource<T>;
+    filter(predicateOrParameterName: expr.Expression<(element: T) => boolean> | ((element: T) => boolean)): IDataSource<T> {
+        return new DataSourceBase<T>();
+    }
+    map<K>(projection: expr.Expression<(element: T) => K>): IDataSource<K>;
+    map<K>(projection: (element: T) => K): IDataSource<K>;
+    map<K>(projectionOrParameterName: expr.Expression<(element: T) => K> | ((element: T) => K)): IDataSource<T> {
+        return new DataSourceBase<T>();
+    }
+}
