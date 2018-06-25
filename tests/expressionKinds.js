@@ -129,8 +129,68 @@ describe('expression kinds', () => {
                     ExpressionBuilder.constant(1)));
         })());
     });
-    test('binary multiply not implemented', () => {
-        expect(compiledTest.out.binaryMultiply).toThrow();
+    test('converts a binary divide', () => {
+        expect(compiledTest.out.binaryDivide()).toEqual((() => {
+            return ExpressionBuilder.createExpression({}, 
+                ExpressionBuilder.binary(
+                    ExpressionBuilder.constant(10),
+                    BinaryOperator.divide,
+                    ExpressionBuilder.constant(2)));
+        })());
+    });
+    test('converts a binary multiply', () => {
+        expect(compiledTest.out.binaryMultiply()).toEqual((() => {
+            return ExpressionBuilder.createExpression({}, 
+                ExpressionBuilder.binary(
+                    ExpressionBuilder.constant(3),
+                    BinaryOperator.multiply,
+                    ExpressionBuilder.constant(2)));
+        })());
+    });
+    test('converts a binary minus', () => {
+        expect(compiledTest.out.binaryMinus()).toEqual((() => {
+            return ExpressionBuilder.createExpression({}, 
+                ExpressionBuilder.binary(
+                    ExpressionBuilder.constant(10),
+                    BinaryOperator.minus,
+                    ExpressionBuilder.constant(2)));
+        })());
+    });
+    test('converts a binary greater than', () => {
+        expect(compiledTest.out.binaryGreaterThan()).toEqual((() => {
+            return ExpressionBuilder.createExpression({}, 
+                ExpressionBuilder.binary(
+                    ExpressionBuilder.constant(10),
+                    BinaryOperator.greaterThan,
+                    ExpressionBuilder.constant(2)));
+        })());
+    });
+    test('converts a binary greater than or equals', () => {
+        expect(compiledTest.out.binaryGreaterThanOrEquals()).toEqual((() => {
+            return ExpressionBuilder.createExpression({}, 
+                ExpressionBuilder.binary(
+                    ExpressionBuilder.constant(10),
+                    BinaryOperator.greaterThanOrEquals,
+                    ExpressionBuilder.constant(2)));
+        })());
+    });
+    test('converts a binary less than', () => {
+        expect(compiledTest.out.binaryLessThan()).toEqual((() => {
+            return ExpressionBuilder.createExpression({}, 
+                ExpressionBuilder.binary(
+                    ExpressionBuilder.constant(10),
+                    BinaryOperator.lessThan,
+                    ExpressionBuilder.constant(2)));
+        })());
+    });
+    test('converts a binary less than or equals', () => {
+        expect(compiledTest.out.binaryLessThanOrEquals()).toEqual((() => {
+            return ExpressionBuilder.createExpression({}, 
+                ExpressionBuilder.binary(
+                    ExpressionBuilder.constant(10),
+                    BinaryOperator.lessThanOrEquals,
+                    ExpressionBuilder.constant(2)));
+        })());
     });
     test('converts a call (0 args)', () => {
         const expr = compiledTest.out.call0();

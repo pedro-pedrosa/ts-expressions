@@ -328,6 +328,20 @@ class FileTransformer {
                 return 'or';
             case ts.SyntaxKind.PlusToken:
                 return 'plus';
+            case ts.SyntaxKind.SlashToken:
+                return 'divide';
+            case ts.SyntaxKind.AsteriskToken:
+                return 'multiply';
+            case ts.SyntaxKind.MinusToken:
+                return 'minus';
+            case ts.SyntaxKind.GreaterThanToken:
+                return 'greaterThan';
+            case ts.SyntaxKind.GreaterThanEqualsToken:
+                return 'greaterThanOrEquals';
+            case ts.SyntaxKind.LessThanToken:
+                return 'lessThan';
+            case ts.SyntaxKind.LessThanEqualsToken:
+                return 'lessThanOrEquals';
             default:
                 throw new NotSupportedException();
         }

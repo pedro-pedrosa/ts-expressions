@@ -67,6 +67,27 @@ export function or(left: ExpressionNode, right: ExpressionNode) {
 export function plus(left: ExpressionNode, right: ExpressionNode) {
     return binary(left, BinaryOperator.plus, right);
 }
+export function divide(left: ExpressionNode, right: ExpressionNode) {
+    return binary(left, BinaryOperator.divide, right);
+}
+export function multiply(left: ExpressionNode, right: ExpressionNode) {
+    return binary(left, BinaryOperator.multiply, right);
+}
+export function minus(left: ExpressionNode, right: ExpressionNode) {
+    return binary(left, BinaryOperator.minus, right);
+}
+export function greaterThan(left: ExpressionNode, right: ExpressionNode) {
+    return binary(left, BinaryOperator.greaterThan, right);
+}
+export function greaterThanOrEquals(left: ExpressionNode, right: ExpressionNode) {
+    return binary(left, BinaryOperator.greaterThanOrEquals, right);
+}
+export function lessThan(left: ExpressionNode, right: ExpressionNode) {
+    return binary(left, BinaryOperator.lessThan, right);
+}
+export function lessThanOrEquals(left: ExpressionNode, right: ExpressionNode) {
+    return binary(left, BinaryOperator.lessThanOrEquals, right);
+}
 
 export function propertyAccess(expression: ExpressionNode, name: string): PropertyAccessExpression {
     return {

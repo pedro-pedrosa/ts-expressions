@@ -15,4 +15,11 @@ export enum BinaryOperator {
     and,
     or,
     plus,
+    divide,
+    multiply,
+    minus,
+    greaterThan,
+    greaterThanOrEquals,
+    lessThan,
+    lessThanOrEquals,
 }
