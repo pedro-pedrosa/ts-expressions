@@ -1,8 +1,5 @@
 const exprtests = require('./lib/tests');
 
-/*compiledTest = exprtests.compile('expressionSignatureDetection');
-compiledTest.out.iinterface();*/
-
 describe('expression signature detection', () => {
     let compiledTest;
     test('source compiles and imports', () => {

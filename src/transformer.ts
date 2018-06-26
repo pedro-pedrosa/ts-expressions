@@ -56,7 +56,7 @@ class FileTransformer {
             const expressionOverload = this.getBestExpressionOverloadDeclarationFromCallExpression(node);
             if (expressionOverload) {
                 return ts.createCall(
-                    node.expression, 
+                    this.visit(node.expression) as ts.Expression, 
                     [],
                     expressionOverload.parameters.map((parameter, i) => this.isTypeNodeExpressionType(parameter.type) && !this.isTypeExpressionType(this.typeChecker.getTypeAtLocation(node.arguments[i])) ? 
                         this.convertExpression(node.arguments[i]) : 
