@@ -18,13 +18,13 @@
     "url": "https://github.com/pedro-pedrosa/ts-expressions.git"
   },
   "dependencies": {
-    "tslib": "^1.9.2",
-    "typescript": "^2.9.1"
+    "tslib": "^1.9.3",
+    "typescript": "^3.1.6"
   },
   "devDependencies": {
-    "@types/jest": "^23.0.0",
-    "jest": "^23.1.0",
-    "ts-jest": "^22.4.6"
+    "@types/jest": "^23.3.9",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.4"
   },
   "jest": {
     "testRegex": "(?:/tests/[^\\./]*)\\.(?:jsx?)$"
